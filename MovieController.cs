@@ -1,6 +1,7 @@
 ﻿using DeltaXMovie.Models;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -23,20 +24,14 @@ namespace DeltaXMovie.Controllers
         {
             var movies = _context.Movies.ToList();
             var actors = _context.Actors.ToList();
-            var Producer = _context.Producers.SingleOrDefault(a=>a.Producer_ID==movies.FirstOrDefault().Movie_ID);
-            var viewModel = new Movies();
-            ViewBag["a"] = Producer;
-            foreach (var item in movies)
-            {
-                viewModel.Movie_ID = item.Movie_ID;
-            }
-           
-                
-            
-            
-               
-            
-            return View(viewModel);
+            var producer = _context.Producers.ToList();
+            var movie_cast = _context.Movie_Cast.ToList();
+            dynamic mymodel = new ExpandoObject();
+            mymodel.Movies = movies;
+            mymodel.Actors = actors;
+            mymodel.Producer = producer;
+            mymodel.Movie_cast = movie_cast;
+            return View(mymodel);
         }
     }
 }

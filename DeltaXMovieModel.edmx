@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DeltaXMovieModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Actors">
+          <Key>
+            <PropertyRef Name="Actor_ID" />
+          </Key>
+          <Property Name="Actor_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Sex" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="DOB" Type="datetime" Nullable="false" />
+          <Property Name="Bio" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Movie_Cast">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="A_ID" Type="int" />
+          <Property Name="M_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="Movies">
+          <Key>
+            <PropertyRef Name="Movie_ID" />
+          </Key>
+          <Property Name="Movie_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="YearOfRelease" Type="datetime" Nullable="false" />
+          <Property Name="Plot" Type="nvarchar" MaxLength="50" />
+          <Property Name="Poster" Type="varbinary(max)" Nullable="false" />
+          <Property Name="P_ID" Type="int" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Producer">
+          <Key>
+            <PropertyRef Name="Producer_ID" />
+          </Key>
+          <Property Name="Producer_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Sex" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="DOB" Type="datetime" Nullable="false" />
+          <Property Name="Bio" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="fk_A_ID_Movie_Cast">
+          <End Role="Actors" Type="Self.Actors" Multiplicity="0..1" />
+          <End Role="Movie_Cast" Type="Self.Movie_Cast" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Actors">
+              <PropertyRef Name="Actor_ID" />
+            </Principal>
+            <Dependent Role="Movie_Cast">
+              <PropertyRef Name="A_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_M_ID_Movie_Cast">
+          <End Role="Movies" Type="Self.Movies" Multiplicity="0..1" />
+          <End Role="Movie_Cast" Type="Self.Movie_Cast" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movies">
+              <PropertyRef Name="Movie_ID" />
+            </Principal>
+            <Dependent Role="Movie_Cast">
+              <PropertyRef Name="M_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ProducerID">
+          <End Role="Producer" Type="Self.Producer" Multiplicity="0..1" />
+          <End Role="Movies" Type="Self.Movies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producer">
+              <PropertyRef Name="Producer_ID" />
+            </Principal>
+            <Dependent Role="Movies">
+              <PropertyRef Name="P_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DeltaXMovieModelStoreContainer">
+          <EntitySet Name="Actors" EntityType="Self.Actors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Movie_Cast" EntityType="Self.Movie_Cast" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Movies" EntityType="Self.Movies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Producer" EntityType="Self.Producer" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="fk_A_ID_Movie_Cast" Association="Self.fk_A_ID_Movie_Cast">
+            <End Role="Actors" EntitySet="Actors" />
+            <End Role="Movie_Cast" EntitySet="Movie_Cast" />
+          </AssociationSet>
+          <AssociationSet Name="fk_M_ID_Movie_Cast" Association="Self.fk_M_ID_Movie_Cast">
+            <End Role="Movies" EntitySet="Movies" />
+            <End Role="Movie_Cast" EntitySet="Movie_Cast" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ProducerID" Association="Self.fk_ProducerID">
+            <End Role="Producer" EntitySet="Producer" />
+            <End Role="Movies" EntitySet="Movies" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DeltaXMovieModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Actor">
+          <Key>
+            <PropertyRef Name="Actor_ID" />
+          </Key>
+          <Property Name="Actor_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Sex" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="DOB" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Bio" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Movie_Cast" Relationship="Self.fk_A_ID_Movie_Cast" FromRole="Actors" ToRole="Movie_Cast" />
+        </EntityType>
+        <EntityType Name="Movie_Cast">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="A_ID" Type="Int32" />
+          <Property Name="M_ID" Type="Int32" />
+          <NavigationProperty Name="Actor" Relationship="Self.fk_A_ID_Movie_Cast" FromRole="Movie_Cast" ToRole="Actors" />
+          <NavigationProperty Name="Movy" Relationship="Self.fk_M_ID_Movie_Cast" FromRole="Movie_Cast" ToRole="Movies" />
+        </EntityType>
+        <EntityType Name="Movy">
+          <Key>
+            <PropertyRef Name="Movie_ID" />
+          </Key>
+          <Property Name="Movie_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="YearOfRelease" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Plot" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Poster" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="P_ID" Type="Int32" />
+          <NavigationProperty Name="Movie_Cast" Relationship="Self.fk_M_ID_Movie_Cast" FromRole="Movies" ToRole="Movie_Cast" />
+          <NavigationProperty Name="Producer" Relationship="Self.fk_ProducerID" FromRole="Movies" ToRole="Producer" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Producer">
+          <Key>
+            <PropertyRef Name="Producer_ID" />
+          </Key>
+          <Property Name="Producer_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Sex" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="DOB" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Bio" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Movies" Relationship="Self.fk_ProducerID" FromRole="Producer" ToRole="Movies" />
+        </EntityType>
+        <Association Name="fk_A_ID_Movie_Cast">
+          <End Role="Actors" Type="Self.Actor" Multiplicity="0..1" />
+          <End Role="Movie_Cast" Type="Self.Movie_Cast" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Actors">
+              <PropertyRef Name="Actor_ID" />
+            </Principal>
+            <Dependent Role="Movie_Cast">
+              <PropertyRef Name="A_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_M_ID_Movie_Cast">
+          <End Role="Movies" Type="Self.Movy" Multiplicity="0..1" />
+          <End Role="Movie_Cast" Type="Self.Movie_Cast" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movies">
+              <PropertyRef Name="Movie_ID" />
+            </Principal>
+            <Dependent Role="Movie_Cast">
+              <PropertyRef Name="M_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ProducerID">
+          <End Role="Producer" Type="Self.Producer" Multiplicity="0..1" />
+          <End Role="Movies" Type="Self.Movy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producer">
+              <PropertyRef Name="Producer_ID" />
+            </Principal>
+            <Dependent Role="Movies">
+              <PropertyRef Name="P_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DeltaXMovieDBContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Actors" EntityType="Self.Actor" />
+          <EntitySet Name="Movie_Cast" EntityType="Self.Movie_Cast" />
+          <EntitySet Name="Movies" EntityType="Self.Movy" />
+          <EntitySet Name="Producers" EntityType="Self.Producer" />
+          <AssociationSet Name="fk_A_ID_Movie_Cast" Association="Self.fk_A_ID_Movie_Cast">
+            <End Role="Actors" EntitySet="Actors" />
+            <End Role="Movie_Cast" EntitySet="Movie_Cast" />
+          </AssociationSet>
+          <AssociationSet Name="fk_M_ID_Movie_Cast" Association="Self.fk_M_ID_Movie_Cast">
+            <End Role="Movies" EntitySet="Movies" />
+            <End Role="Movie_Cast" EntitySet="Movie_Cast" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ProducerID" Association="Self.fk_ProducerID">
+            <End Role="Producer" EntitySet="Producers" />
+            <End Role="Movies" EntitySet="Movies" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DeltaXMovieModelStoreContainer" CdmEntityContainer="DeltaXMovieDBContext">
+          <EntitySetMapping Name="Actors">
+            <EntityTypeMapping TypeName="DeltaXMovieModel.Actor">
+              <MappingFragment StoreEntitySet="Actors">
+                <ScalarProperty Name="Actor_ID" ColumnName="Actor_ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Sex" ColumnName="Sex" />
+                <ScalarProperty Name="DOB" ColumnName="DOB" />
+                <ScalarProperty Name="Bio" ColumnName="Bio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Movie_Cast">
+            <EntityTypeMapping TypeName="DeltaXMovieModel.Movie_Cast">
+              <MappingFragment StoreEntitySet="Movie_Cast">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="A_ID" ColumnName="A_ID" />
+                <ScalarProperty Name="M_ID" ColumnName="M_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Movies">
+            <EntityTypeMapping TypeName="DeltaXMovieModel.Movy">
+              <MappingFragment StoreEntitySet="Movies">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Movie_ID" ColumnName="Movie_ID" />
+                <ScalarProperty Name="YearOfRelease" ColumnName="YearOfRelease" />
+                <ScalarProperty Name="Plot" ColumnName="Plot" />
+                <ScalarProperty Name="Poster" ColumnName="Poster" />
+                <ScalarProperty Name="P_ID" ColumnName="P_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Producers">
+            <EntityTypeMapping TypeName="DeltaXMovieModel.Producer">
+              <MappingFragment StoreEntitySet="Producer">
+                <ScalarProperty Name="Producer_ID" ColumnName="Producer_ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Sex" ColumnName="Sex" />
+                <ScalarProperty Name="DOB" ColumnName="DOB" />
+                <ScalarProperty Name="Bio" ColumnName="Bio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

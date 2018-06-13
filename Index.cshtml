@@ -1,8 +1,38 @@
-﻿@model WebApplication3.Models.NewMovieViewModel
+﻿@using DeltaXMovie;
+@model dynamic 
+@*@model DeltaXMovie.Models.Movies*@
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>@Model.Movie.Name</h2>
-<h2>@Model.Producer.Name</h2>
+<h2>Movies List</h2>
+@foreach (var item in Model.Movies)
+{     
+             
+    <h3>@item.Name (@item.YearOfRelease.ToString("yyyy"))</h3>
+    foreach (var producer in Model.Producer)
+    {
+        if (item.P_ID== producer.Producer_ID)
+        {
+            <p><b>Producer:</b>@producer.Name</p>
+        }
+
+    }
+    foreach (var movie_cast in Model.Movie_cast)
+    {
+        if (movie_cast.M_ID==item.Movie_ID)
+        {
+            foreach (var star in Model.Actors)
+            {
+                if (star.Actor_ID == movie_cast.A_ID) {
+                    <p><b>Stars:</b>@star.Name</p>
+                }
+            }
+        }
+        <p></p>
+    }
+}
+    
+
+
 
